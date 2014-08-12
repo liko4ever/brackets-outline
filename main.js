@@ -21,7 +21,7 @@
 */
 
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
-/*global define, $, brackets, window */
+/*global define, $, brackets, window, document */
 define(function (require, exports, module) {
     "use strict";
     
@@ -48,7 +48,7 @@ define(function (require, exports, module) {
         
         for (i = 0; i < lines.length; i++) {
             if (lines[i].indexOf("data:") > -1) {
-                var r = /data:\w+\/[\w-]+;/
+                var r = /data:\w+\/[\w-]+;/;
                 
                 if (lines[i].match(r) !== null)
                     continue;
@@ -70,6 +70,10 @@ define(function (require, exports, module) {
                     name = (match[3] || match[2] || "") + (match[4] || "");
                     break;
 
+                case "cobol":
+                    name = match[0];
+                    break;
+                    
                 default:
                     name = "";
                     break;
@@ -111,7 +115,8 @@ define(function (require, exports, module) {
     function updateOutline() {
         var content, i, line, name, regex, type, fkt;
         var doc = DocumentManager.getCurrentDocument();
-        
+        var lines;
+      
         $("#crabcode-outline-window").empty();
         
         if (doc !== null) {
@@ -168,7 +173,7 @@ define(function (require, exports, module) {
             case "CSS":
                 regex = /([^\r\n,{}]+)((?=[^}]*\{)|\s*\{)/g;
                 
-                var lines = findMatches(regex, "css", doc.getText());
+                lines = findMatches(regex, "css", doc.getText());
                 
                 for (i = 0; i < lines.length; i++) {
                     switch (lines[i][0][0]) {
@@ -196,7 +201,7 @@ define(function (require, exports, module) {
             case "LESS":
                 regex = /([^\r\n,{}]+)((?=[^}]*\{)|\s*\{)/g;
                 
-                var lines = findMatches(regex, "less", doc.getText());
+                lines = findMatches(regex, "less", doc.getText());
                 
                 for (i = 0; i < lines.length; i++) {
                     switch (lines[i][0][0]) {
@@ -218,6 +223,15 @@ define(function (require, exports, module) {
                     }
                     
                     $("#crabcode-outline-window").append($(document.createElement("div")).addClass("crabcode-outline-entry crabcode-outline-css-" + type).text(lines[i][0]).click({ line: lines[i][1], ch: lines[i][2] }, goToLine));
+                }
+                break;
+            case "COBOL":
+                regex = /^       (.*)\sSECTION\.$/;
+                
+                lines = findMatches(regex, "cobol", doc.getText());
+
+                for (i = 0; i < lines.length; i++) {
+                    $("#crabcode-outline-window").append($(document.createElement("div")).addClass("crabcode-outline-entry crabcode-outline-js-function").text(lines[i][0]).click({ line: lines[i][1], ch: lines[i][2] }, goToLine));
                 }
                 break;
             }
