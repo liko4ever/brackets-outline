@@ -67,7 +67,7 @@ define(function (require, exports, module) {
                     break;
 
                 case "js":
-                    name = (match[3] || match[2] || "") + (match[4] || "");
+					name = (match[3].trim() || match[2] || "") + (match[4] || "");
                     break;
 
                 case "cobol":
