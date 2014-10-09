@@ -148,7 +148,7 @@ define(function (require, exports, module) {
             
             case "JavaScript":
                 if (prefs.get("args")) {
-                    regex = /((\w*)\s*[=:]\s*)?function(\s*|\s+\w*\s*)(\([\w,\s]*\))/g;
+                    regex = /((\w*)\s*[=:]\s*)?function(\s*|\s+\w*\s*)(\([\w,\s,\$,\_]*\))/g;
                 } else {
                     regex = /((\w*)\s*[=:]\s*)?function(\s*|\s+\w*\s*)()\(/g;
                 }
